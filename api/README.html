@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Relations API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 800px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-left: 3px solid #ccc;
+            overflow-x: auto;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Organization Relations API</h1>
+    <p>A PHP-based project to manage organizations and their relations (parent, sister, and child). This project provides a REST API to retrieve and manage organization data.</p>
+    
+    <hr>
+    
+    <h2>🚀 Getting Started</h2>
+    <h3>Prerequisites</h3>
+    <p>Ensure you have the following installed and configured:</p>
+    <ul>
+        <li><strong>Apache 2.4</strong></li>
+        <li><strong>PHP 5.6</strong></li>
+        <li><strong>MySQL 5.7</strong></li>
+    </ul>
+    
+    <hr>
+    
+    <h2>📂 Project Structure</h2>
+    <pre>
+/api
+├── index.php                  // Entry point
+├── db.php                     // Database connection
+├── controllers/               // API controllers
+│   ├── OrganizationController.php
+│   ├── RelationController.php
+└── models/                    // Models for data handling
+    ├── Organization.php
+    ├── Relation.php
+    </pre>
+    
+    <hr>
+    
+    <h2>⚙️ Setup Instructions</h2>
+    <h3>1. Database Setup</h3>
+    <p>Create the database in MySQL:</p>
+    <pre>
+CREATE DATABASE organizations;
+    </pre>
+    <p>Create the <code>organizations</code> table:</p>
+    <pre>
+CREATE TABLE organizations (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) UNIQUE NOT NULL
+);
+    </pre>
+    <p>Create the <code>relations</code> table:</p>
+    <pre>
+CREATE TABLE relations (
+    parent_id INT NOT NULL,
+    child_id INT NOT NULL,
+    FOREIGN KEY (parent_id) REFERENCES organizations(id),
+    FOREIGN KEY (child_id) REFERENCES organizations(id),
+    UNIQUE (parent_id, child_id)
+);
+    </pre>
+    
+    <h3>2. Project Configuration</h3>
+    <p>Copy the <code>api</code> folder to the server's <code>www</code> directory (or any directory configured for your server).</p>
+    <p>Update the database connection settings in <code>db.php</code> with your MySQL credentials.</p>
+    
+    <h3>3. Access the API</h3>
+    <p>By default, the project will be accessible at:</p>
+    <pre>http://localhost/api/index.php</pre>
+    <p>If your server is configured differently, update the <code>switch</code> statement in <code>index.php</code> to match your setup.</p>
+    
+    <hr>
+    
+    <h2>📋 API Endpoints</h2>
+    
+    <h3>1. Get Relations</h3>
+    <p>Retrieve the relations (parent, sister, child) of an organization.</p>
+    <p><strong>Endpoint:</strong></p>
+    <pre>GET http://localhost/api/index.php/relations/</pre>
+    <p><strong>Parameters:</strong></p>
+    <ul>
+        <li><strong>Required:</strong> <code>org_name</code> – Name of the organization.</li>
+        <li><strong>Optional:</strong> <code>page</code> – Desired page number (default is 1).</li>
+        <li><strong>Optional:</strong> <code>page_size</code> – Number of records per page (default is 100, maximum is 100).</li>
+    </ul>
+    <p><strong>Example:</strong></p>
+    <pre>GET http://localhost/api/index.php/relations?org_name=Organization1&page=1&page_size=50</pre>
+    
+    <h3>2. Add Organizations</h3>
+    <p>Add a new organization to the database.</p>
+    <p><strong>Endpoint:</strong></p>
+    <pre>POST http://localhost/api/index.php/organizations/</pre>
+    <p><strong>Example Payload:</strong></p>
+    <pre>
+        {
+            "org_name": "Paradise Island",
+            "daughters": [
+                {
+                    "org_name": "Banana tree",
+                    "daughters": [
+                        {
+                            "org_name": "Yellow Banana"
+                        },
+                        {
+                            "org_name": "Brown Banana"
+                        },
+                        {
+                            "org_name": "Black Banana"
+                        }
+                    ]
+                },
+                {
+                    "org_name": "Big banana tree",
+                    "daughters": [
+                        {
+                            "org_name": "Yellow Banana"
+                        },
+                        {
+                            "org_name": "Brown Banana"
+                        },
+                        {
+                            "org_name": "Green Banana"
+                        },
+                        {
+                            "org_name": "Black Banana",
+                            "daughters": [
+                                {
+                                    "org_name": "Phoneutria Spider"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    </pre>
+    
+    <hr>
+    
+    <h2>🛠 Created With</h2>
+    <p>This project was developed and tested using <strong>EASYPHP DEVSERVER 17.0</strong>.</p>
+    
+    <h3>HTTP Server</h3>
+    <ul>
+        <li>Apache 2.4.25 x86</li>
+        <li>PHP 5.6.30 x86</li>
+        <li>Port: 80</li>
+    </ul>
+    
+    <h3>Database Server</h3>
+    <ul>
+        <li>MySQL 5.7.17 x86</li>
+        <li>Port: 3306</li>
+    </ul>
+    
+    <hr>
+    
+    <h2>💡 Notes</h2>
+    <ul>
+        <li>Default pagination supports up to <strong>100 records per page</strong>.</li>
+        <li>Customize the project and server settings as needed for your environment.</li>
+    </ul>
+    
+    <hr>
+
+</body>
+</html>
